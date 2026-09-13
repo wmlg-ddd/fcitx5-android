@@ -148,15 +148,16 @@ class CandidatesView(
     }
 
     private fun movePreeditCursor(target: Int) {
-        // TODO: 旧版本没有 sendKey，先不实现
-        // val current = inputPanel.preedit.cursor
-        // if (current < 0) return
-        // val diff = target - current
-        // if (diff == 0) return
-        // val sym = if (diff < 0) FcitxKeyMapping.FcitxKey_Left else FcitxKeyMapping.FcitxKey_Right
-        // fcitx.launchOnReady {
-        //     repeat(abs(diff)) { it.sendKey(KeySym(sym), KeyStates.Virtual) }
-        // }
+         val current = inputPanel.preedit.cursor
+        if (current < 0) return
+        val diff = target - current
+        if (diff == 0) return
+        val sym = if (diff < 0) FcitxKeyMapping.FcitxKey_Left else FcitxKeyMapping.FcitxKey_Right
+        fcitx.launchOnReady { api ->
+            repeat(abs(diff)) {
+                api.sendKey(KeySym(sym), KeyStates.Virtual, 0, false, 0)
+        }
+    }
     }
 
     private var bottomInsets = 0
