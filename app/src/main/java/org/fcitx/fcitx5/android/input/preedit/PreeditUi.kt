@@ -155,8 +155,10 @@ open class PreeditUi(
     }
 
     private fun onTouch(v: View, event: MotionEvent): Boolean {
+        // must consume the events, otherwise no ACTION_UP would be
+        // dispatched to this view afterwards
         if (event.action == MotionEvent.ACTION_UP) {
-            val layout = upView.layout ?: return false
+            val layout = upView.layout ?: return true
             val line = layout.getLineForVertical(event.y.toInt())
             // convert from view coordinates to layout coordinates
             val x = event.x - upView.totalPaddingLeft + upView.scrollX
@@ -166,7 +168,7 @@ open class PreeditUi(
                 onPreeditTapped?.invoke(target)
             }
         }
-        return false
+        return true
     }
 
     /**
