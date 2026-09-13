@@ -99,7 +99,7 @@ class CandidatesView(
         setPadding(h, v, h, v)
     }
 
-    private val preeditUi = PreeditUi(ctx, theme, setupTextView, onPreeditTapped = ::movePreeditCursor)
+    private val preeditUi = PreeditUi(ctx, theme, setupTextView)
 
     private val candidatesUi = PagedCandidatesUi(
         ctx, theme, setupTextView,
@@ -148,14 +148,15 @@ class CandidatesView(
     }
 
     private fun movePreeditCursor(target: Int) {
-        val current = inputPanel.preedit.cursor
-        if (current < 0) return
-        val diff = target - current
-        if (diff == 0) return
-        val sym = if (diff < 0) FcitxKeyMapping.FcitxKey_Left else FcitxKeyMapping.FcitxKey_Right
-        fcitx.launchOnReady {
-            repeat(abs(diff)) { it.sendKey(KeySym(sym), KeyStates.Virtual) }
-        }
+        // TODO: 旧版本没有 sendKey，先不实现
+        // val current = inputPanel.preedit.cursor
+        // if (current < 0) return
+        // val diff = target - current
+        // if (diff == 0) return
+        // val sym = if (diff < 0) FcitxKeyMapping.FcitxKey_Left else FcitxKeyMapping.FcitxKey_Right
+        // fcitx.launchOnReady {
+        //     repeat(abs(diff)) { it.sendKey(KeySym(sym), KeyStates.Virtual) }
+        // }
     }
 
     private var bottomInsets = 0
