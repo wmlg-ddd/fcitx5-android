@@ -173,11 +173,17 @@ open class CustomGestureView(ctx: Context) : FrameLayout(ctx) {
                     repeatJob = lifecycleScope.launch {
                         delay(longPressDelay.toLong())
                         repeatStarted = true
-                        var lastTriggerTime: Long
+                        val repeatStart = SystemClock.uptimeMillis()
                         while (isActive && isEnabled) {
-                            lastTriggerTime = SystemClock.uptimeMillis()
+                            val lastTriggerTime = SystemClock.uptimeMillis()
                             onRepeatListener?.invoke(this@CustomGestureView)
-                            val t = lastTriggerTime + RepeatInterval - SystemClock.uptimeMillis()
+                            // interval shrinks from RepeatStartInterval to RepeatEndInterval
+                            // as the key is held, to accelerate deletion
+                            val held = lastTriggerTime - repeatStart
+                            val progress = (held.toFloat() / RepeatAccelMillis).coerceIn(0f, 1f)
+                            val interval = (RepeatStartInterval +
+                                    (RepeatEndInterval - RepeatStartInterval) * progress).toLong()
+                            val t = lastTriggerTime + interval - SystemClock.uptimeMillis()
                             if (t > 0) delay(t)
                         }
                     }
@@ -310,6 +316,10 @@ open class CustomGestureView(ctx: Context) : FrameLayout(ctx) {
 
     companion object {
         val longPressDelay by AppPrefs.getInstance().keyboard.longPressDelay
-        const val RepeatInterval = 50L
+
+        // initial repeat interval, accelerating to RepeatEndInterval after RepeatAccelMillis
+        const val RepeatStartInterval = 50L
+        const val RepeatEndInterval = 30L
+        const val RepeatAccelMillis = 2000L
     }
 }
