@@ -49,8 +49,8 @@ class TextKeyboard(
                 AlphabetKey("D", "@"),
                 AlphabetKey("F", "#"),
                 AlphabetKey("G", "%"),
-                AlphabetKey("H", "\""),
-                AlphabetKey("J", "\""),
+                AlphabetKey("H", "'"),
+                AlphabetKey("J", "&"),
                 AlphabetKey("K", "*"),
                 AlphabetKey("L", "?")
             ),
@@ -111,13 +111,19 @@ class TextKeyboard(
     }
 
     private var punctuationMapping: Map<String, String> = mapOf()
-    private fun transformPunctuation(p: String) = punctuationMapping.getOrDefault(p, p)
 
-    private fun transformAltText(def: KeyDef.Appearance.AltText): String {
-        val t = transformPunctuation(def.altText)
-        // the second quote key (J) displays the closing quote in Chinese mode
-        if (def.displayText == "J" && def.altText == "\"" && t == "“") return "”"
-        return t
+    // whether the active input method is Chinese; punctuation display and
+    // output only get converted in Chinese mode
+    private var isCnMode = true
+
+    private fun transformPunctuation(p: String) =
+        if (isCnMode) punctuationMapping.getOrDefault(p, p) else p
+
+    private fun transformAltText(def: KeyDef.Appearance.AltText): String = when (def.displayText) {
+        // H/J: ASCII quote/ampersand in English mode, full-width quotes in Chinese mode
+        "H" -> if (isCnMode) "“" else "'"
+        "J" -> if (isCnMode) "”" else "&"
+        else -> transformPunctuation(def.altText)
     }
 
     override fun onAction(action: KeyAction, source: KeyActionListener.Source) {
@@ -142,6 +148,13 @@ class TextKeyboard(
                                 states = KeyStates(KeyState.Virtual, KeyState.CapsLock)
                             )
                         }
+                    }
+                    val fk = transformed as KeyAction.FcitxKeyAction
+                    // H/J emit full-width quotes in Chinese mode
+                    transformed = when (fk.act) {
+                        "'" -> if (isCnMode) fk.copy(act = "“") else fk
+                        "&" -> if (isCnMode) fk.copy(act = "”") else fk
+                        else -> fk
                     }
                 }
                 KeyActionListener.Source.Popup -> {
@@ -176,15 +189,21 @@ class TextKeyboard(
             append(ime.displayName)
             ime.subMode.run { label.ifEmpty { name.ifEmpty { null } } }?.let { append(" ($it)") }
         }
+        isCnMode = ime.languageCode.startsWith("zh")
+        updatePunctuationKeys()
         if (capsState != CapsState.None) {
             switchCapsState()
         }
     }
 
-    private fun transformPopupPreview(c: String): String {
-        if (c.length != 1) return c
-        if (c[0].isLetter()) return transformAlphabet(c)
-        return transformPunctuation(c)
+    private fun transformPopupPreview(c: String): String = when (c) {
+        "'" -> if (isCnMode) "“" else "'"
+        "&" -> if (isCnMode) "”" else "&"
+        else -> {
+            if (c.length != 1) c
+            else if (c[0].isLetter()) transformAlphabet(c)
+            else transformPunctuation(c)
+        }
     }
 
     override fun onPopupAction(action: PopupAction) {
