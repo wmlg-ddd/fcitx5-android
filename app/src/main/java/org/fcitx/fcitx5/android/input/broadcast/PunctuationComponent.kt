@@ -52,4 +52,19 @@ class PunctuationComponent :
             broadcaster.onPunctuationUpdate(mapping)
         }
     }
+
+    /**
+     * Drop the zh_CN mappings for `-`, `_` and `~` so that the corresponding
+     * keys output the literal ASCII characters in Chinese mode as well.
+     * Saving the fixed profile makes this a no-op on subsequent launches.
+     */
+    suspend fun fixPunctuationProfile() {
+        fcitx.runOnReady {
+            val entries = PunctuationManager.load(this, "zh_CN")
+            val fixed = entries.filterNot { it.key == "-" || it.key == "_" || it.key == "~" }
+            if (fixed.size != entries.size) {
+                PunctuationManager.save(this, "zh_CN", fixed)
+            }
+        }
+    }
 }
