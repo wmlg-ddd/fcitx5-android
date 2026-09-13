@@ -5,12 +5,16 @@
 package org.fcitx.fcitx5.android.input.preedit
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
+import android.os.Handler
+import android.os.Looper
 import android.text.Spanned
 import android.text.SpannedString
 import android.text.style.DynamicDrawableSpan
+import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -27,7 +31,13 @@ import splitties.views.dsl.core.verticalLayout
 open class PreeditUi(
     override val ctx: Context,
     private val theme: Theme,
-    private val setupTextView: (TextView.() -> Unit)? = null
+    private val setupTextView: (TextView.() -> Unit)? = null,
+    /**
+     * Invoked when the user taps on the (preedit) upper text, with the tapped position
+     * (in Java char offsets) inside the preedit string, clamped to [0, preedit.length].
+     * The engine cursor can then be moved there by sending Left/Right key events.
+     */
+    private val onPreeditTapped: ((Int) -> Unit)? = null
 ) : Ui {
 
     class CursorSpan(ctx: Context, @ColorInt color: Int, metrics: Paint.FontMetricsInt) :
@@ -42,6 +52,12 @@ open class PreeditUi(
 
     private val cursorSpan by lazy {
         CursorSpan(ctx, theme.keyTextColor, upView.paint.fontMetricsInt)
+    }
+
+    // transparent caret used during the blink-off phase, keeping the caret char in place
+    // so the text layout doesn't shift while blinking
+    private val hiddenCursorSpan by lazy {
+        CursorSpan(ctx, Color.TRANSPARENT, upView.paint.fontMetricsInt)
     }
 
     private fun createTextView() = textView {
@@ -62,12 +78,42 @@ open class PreeditUi(
         add(downView, lParams())
     }
 
+    init {
+        if (onPreeditTapped != null) {
+            upView.setOnTouchListener { v, event -> onTouch(v, event) }
+        }
+    }
+
+    private val blinkHandler = Handler(Looper.getMainLooper())
+    private var caretVisible = true
+    private var lastInputPanel: FcitxEvent.InputPanelEvent.Data? = null
+
+    private val blinkRunnable = object : Runnable {
+        override fun run() {
+            if (!visible) return
+            caretVisible = !caretVisible
+            render()
+            blinkHandler.postDelayed(this, BlinkInterval)
+        }
+    }
+
     private fun updateTextView(view: TextView, str: CharSequence, visible: Boolean) {
         view.text = str
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun update(inputPanel: FcitxEvent.InputPanelEvent.Data) {
+        lastInputPanel = inputPanel
+        caretVisible = true
+        blinkHandler.removeCallbacks(blinkRunnable)
+        render()
+        if (visible) {
+            blinkHandler.postDelayed(blinkRunnable, BlinkInterval)
+        }
+    }
+
+    private fun render() {
+        val inputPanel = lastInputPanel ?: return
         val activeBkg = theme.genericActiveBackgroundColor
         val upString: SpannedString
         val upCursor: Int
@@ -98,10 +144,48 @@ open class PreeditUi(
         } else buildSpannedString {
             if (upCursor > 0) append(upString, 0, upCursor)
             append('|')
-            setSpan(cursorSpan, upCursor, upCursor + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            setSpan(
+                if (caretVisible) cursorSpan else hiddenCursorSpan,
+                upCursor, upCursor + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+            )
             append(upString, upCursor, upString.length)
         }
         updateTextView(upView, upStringWithCursor, hasUp)
         updateTextView(downView, downString, hasDown)
+    }
+
+    private fun onTouch(v: View, event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_UP) {
+            val layout = upView.layout ?: return false
+            val line = layout.getLineForVertical(event.y.toInt())
+            // convert from view coordinates to layout coordinates
+            val x = event.x - upView.totalPaddingLeft + upView.scrollX
+            val displayOffset = layout.getOffsetForHorizontal(line, x)
+            val target = toPreeditPosition(displayOffset)
+            if (target >= 0) {
+                onPreeditTapped?.invoke(target)
+            }
+        }
+        return false
+    }
+
+    /**
+     * Map an offset in the displayed upper text back to a position inside the preedit string,
+     * compensating for the [auxUp] prefix and the inserted caret char.
+     */
+    private fun toPreeditPosition(displayOffset: Int): Int {
+        val data = lastInputPanel ?: return -1
+        val preeditLen = data.preedit.length
+        if (preeditLen == 0) return -1
+        val auxUpLen = data.auxUp.length
+        val upCursor = if (data.auxUp.isEmpty()) data.preedit.cursor
+        else data.preedit.cursor.let { if (it < 0) it else auxUpLen + it }
+        val hasCaretChar = upCursor in 0 until (auxUpLen + preeditLen)
+        val srcOffset = if (hasCaretChar && displayOffset > upCursor) displayOffset - 1 else displayOffset
+        return (srcOffset - auxUpLen).coerceIn(0, preeditLen)
+    }
+
+    companion object {
+        const val BlinkInterval = 500L
     }
 }
