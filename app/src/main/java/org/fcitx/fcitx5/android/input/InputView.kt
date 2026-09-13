@@ -209,6 +209,7 @@ class InputView(
 
         // restore punctuation mapping in case of InputView recreation
         fcitx.launchOnReady {
+            punctuation.fixPunctuationProfile()
             punctuation.updatePunctuationMapping(it.statusAreaActionsCached)
         }
 
