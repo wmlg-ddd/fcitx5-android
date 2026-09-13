@@ -44,33 +44,33 @@ class TextKeyboard(
                 AlphabetKey("P", "0")
             ),
             listOf(
-                AlphabetKey("A", "@"),
-                AlphabetKey("S", "*"),
-                AlphabetKey("D", "+"),
-                AlphabetKey("F", "-"),
-                AlphabetKey("G", "="),
-                AlphabetKey("H", "/"),
-                AlphabetKey("J", "#"),
-                AlphabetKey("K", "("),
-                AlphabetKey("L", ")")
+                AlphabetKey("A", "~"),
+                AlphabetKey("S", "!"),
+                AlphabetKey("D", "@"),
+                AlphabetKey("F", "#"),
+                AlphabetKey("G", "%"),
+                AlphabetKey("H", "\""),
+                AlphabetKey("J", "\""),
+                AlphabetKey("K", "*"),
+                AlphabetKey("L", "?")
             ),
             listOf(
                 CapsKey(),
-                AlphabetKey("Z", "'"),
-                AlphabetKey("X", ":"),
-                AlphabetKey("C", "\""),
-                AlphabetKey("V", "?"),
-                AlphabetKey("B", "!"),
-                AlphabetKey("N", "~"),
-                AlphabetKey("M", "\\"),
+                AlphabetKey("Z", "("),
+                AlphabetKey("X", ")"),
+                AlphabetKey("C", "-"),
+                AlphabetKey("V", "_"),
+                AlphabetKey("B", ":"),
+                AlphabetKey("N", ";"),
+                AlphabetKey("M", "/"),
                 BackspaceKey()
             ),
             listOf(
                 LayoutSwitchKey("?123", ""),
                 CommaKey(0.1f, KeyDef.Appearance.Variant.Alternative),
-                LanguageKey(),
                 SpaceKey(),
                 SymbolKey(".", 0.1f, KeyDef.Appearance.Variant.Alternative),
+                LanguageKey(),
                 ReturnKey()
             )
         )
@@ -112,6 +112,13 @@ class TextKeyboard(
 
     private var punctuationMapping: Map<String, String> = mapOf()
     private fun transformPunctuation(p: String) = punctuationMapping.getOrDefault(p, p)
+
+    private fun transformAltText(def: KeyDef.Appearance.AltText): String {
+        val t = transformPunctuation(def.altText)
+        // the second quote key (J) displays the closing quote in Chinese mode
+        if (def.displayText == "J" && def.altText == "\"" && t == "“") return "”"
+        return t
+    }
 
     override fun onAction(action: KeyAction, source: KeyActionListener.Source) {
         var transformed = action
@@ -247,7 +254,7 @@ class TextKeyboard(
         textKeys.forEach {
             if (it is AltTextKeyView) {
                 it.def as KeyDef.Appearance.AltText
-                it.altText.text = transformPunctuation(it.def.altText)
+                it.altText.text = transformAltText(it.def)
             } else {
                 it.def as KeyDef.Appearance.Text
                 it.mainText.text = it.def.displayText.let { str ->
