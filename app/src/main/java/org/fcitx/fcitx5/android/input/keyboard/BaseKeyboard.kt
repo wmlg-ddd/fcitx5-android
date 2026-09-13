@@ -220,11 +220,27 @@ abstract class BaseKeyboard(
                     }
                     is KeyDef.Behavior.Swipe -> {
                         swipeEnabled = true
-                        swipeThresholdX = disabledSwipeThreshold
+                        swipeThresholdX = selectionSwipeThreshold
                         swipeThresholdY = inputSwipeThreshold
+                        swipeRepeatEnabled = true
                         val oldOnGestureListener = onGestureListener ?: OnGestureListener.Empty
                         onGestureListener = OnGestureListener { view, event ->
                             when (event.type) {
+                                GestureType.Move -> when (val count = event.countX) {
+                                    0 -> false
+                                    // horizontal swipe moves the cursor, but leave the
+                                    // gesture unconsumed when it is mainly vertical,
+                                    // so the up swipe still triggers the swipe symbol
+                                    else -> if (event.totalX.absoluteValue > event.totalY.absoluteValue) {
+                                        val sym =
+                                            if (count > 0) FcitxKeyMapping.FcitxKey_Right else FcitxKeyMapping.FcitxKey_Left
+                                        repeat(count.absoluteValue) {
+                                            onAction(KeyAction.SymAction(KeySym(sym), KeyStates.Virtual))
+                                            if (hapticOnRepeat) InputFeedbacks.hapticFeedback(view)
+                                        }
+                                        true
+                                    } else false
+                                }
                                 GestureType.Up -> {
                                     if (!event.consumed && swipeSymbolDirection.checkY(event.totalY)) {
                                         onAction(it.action)
@@ -336,6 +352,31 @@ abstract class BaseKeyboard(
                             oldOnGestureListener.onGesture(view, event)
                         }
                     }
+                }
+            }
+            if (!swipeEnabled) {
+                // keys without dedicated swipe behavior also move the cursor on horizontal swipe
+                swipeEnabled = true
+                swipeThresholdX = selectionSwipeThreshold
+                swipeThresholdY = disabledSwipeThreshold
+                swipeRepeatEnabled = true
+                val oldOnGestureListener = onGestureListener ?: OnGestureListener.Empty
+                onGestureListener = OnGestureListener { view, event ->
+                    when (event.type) {
+                        GestureType.Move -> when (val count = event.countX) {
+                            0 -> false
+                            else -> {
+                                val sym =
+                                    if (count > 0) FcitxKeyMapping.FcitxKey_Right else FcitxKeyMapping.FcitxKey_Left
+                                repeat(count.absoluteValue) {
+                                    onAction(KeyAction.SymAction(KeySym(sym), KeyStates.Virtual))
+                                    if (hapticOnRepeat) InputFeedbacks.hapticFeedback(view)
+                                }
+                                true
+                            }
+                        }
+                        else -> false
+                    } || oldOnGestureListener.onGesture(view, event)
                 }
             }
         }
