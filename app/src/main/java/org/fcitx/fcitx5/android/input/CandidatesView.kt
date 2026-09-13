@@ -17,6 +17,9 @@ import android.widget.TextView
 import androidx.annotation.Size
 import org.fcitx.fcitx5.android.R
 import org.fcitx.fcitx5.android.core.FcitxEvent
+import org.fcitx.fcitx5.android.core.FcitxKeyMapping
+import org.fcitx.fcitx5.android.core.KeyStates
+import org.fcitx.fcitx5.android.core.KeySym
 import org.fcitx.fcitx5.android.daemon.FcitxConnection
 import org.fcitx.fcitx5.android.daemon.launchOnReady
 import org.fcitx.fcitx5.android.data.prefs.AppPrefs
@@ -35,6 +38,7 @@ import splitties.views.dsl.core.add
 import splitties.views.dsl.core.withTheme
 import splitties.views.dsl.core.wrapContent
 import splitties.views.padding
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 @SuppressLint("ViewConstructor")
@@ -95,7 +99,7 @@ class CandidatesView(
         setPadding(h, v, h, v)
     }
 
-    private val preeditUi = PreeditUi(ctx, theme, setupTextView)
+    private val preeditUi = PreeditUi(ctx, theme, setupTextView, onPreeditTapped = ::movePreeditCursor)
 
     private val candidatesUi = PagedCandidatesUi(
         ctx, theme, setupTextView,
@@ -140,6 +144,17 @@ class CandidatesView(
         } else {
             // RecyclerView won't update its items when ancestor view is GONE
             visibility = INVISIBLE
+        }
+    }
+
+    private fun movePreeditCursor(target: Int) {
+        val current = inputPanel.preedit.cursor
+        if (current < 0) return
+        val diff = target - current
+        if (diff == 0) return
+        val sym = if (diff < 0) FcitxKeyMapping.FcitxKey_Left else FcitxKeyMapping.FcitxKey_Right
+        fcitx.launchOnReady {
+            repeat(abs(diff)) { it.sendKey(KeySym(sym), KeyStates.Virtual) }
         }
     }
 
