@@ -318,4 +318,18 @@
     <string name="key_border_stroke">Включить обводку для границы клавиши</string>
     <string name="preferred_voice_input">Предпочтительный голосовой ввод</string>
     <string name="edit_text_playground">Тестовое поле EditText</string>
-    </resources>
+        <string name="typing_stats">Статистика ввода</string>
+    <string name="stats_enable">Включить статистику ввода</string>
+    <string name="stats_privacy_hint">Статистика хранится только на устройстве. Поля паролей не учитываются.</string>
+    <string name="stats_today">Сегодня</string>
+    <string name="stats_chars">Символы</string>
+    <string name="stats_speed">Скорость (симв./мин)</string>
+    <string name="stats_total_summary">Всего: %1$s симв. за %2$d дн.</string>
+    <string name="stats_last_7_days">7 дней</string>
+    <string name="stats_last_30_days">30 дней</string>
+    <string name="stats_daily_chars">Символы по дням</string>
+    <string name="stats_daily_speed">Скорость по дням (симв./мин)</string>
+    <string name="stats_top_chars">Частые символы</string>
+    <string name="stats_top_words">Частые слова</string>
+    <string name="stats_no_data">Данных пока нет</string>
+</resources>

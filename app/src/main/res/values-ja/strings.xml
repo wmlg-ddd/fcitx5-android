@@ -254,4 +254,18 @@
     <string name="flip_horizontally">左右反転</string>
     <string name="flip_vertically">上下反転</string>
     <string name="crop">切り取り</string>
-    </resources>
+        <string name="typing_stats">入力統計</string>
+    <string name="stats_enable">入力統計を有効にする</string>
+    <string name="stats_privacy_hint">統計は端末内にのみ保存されます。パスワード欄は記録されません。</string>
+    <string name="stats_today">今日</string>
+    <string name="stats_chars">文字数</string>
+    <string name="stats_speed">速度（文字/分）</string>
+    <string name="stats_total_summary">合計 %1$s 文字 / %2$d 日</string>
+    <string name="stats_last_7_days">7日間</string>
+    <string name="stats_last_30_days">30日間</string>
+    <string name="stats_daily_chars">日別文字数</string>
+    <string name="stats_daily_speed">日別速度（文字/分）</string>
+    <string name="stats_top_chars">よく使う文字</string>
+    <string name="stats_top_words">よく使う単語</string>
+    <string name="stats_no_data">データなし</string>
+</resources>

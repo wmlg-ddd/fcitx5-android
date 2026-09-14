@@ -33,6 +33,7 @@ import org.fcitx.fcitx5.android.ui.main.settings.behavior.SymbolSettingsFragment
 import org.fcitx.fcitx5.android.ui.main.settings.global.GlobalConfigFragment
 import org.fcitx.fcitx5.android.ui.main.settings.im.InputMethodConfigFragment
 import org.fcitx.fcitx5.android.ui.main.settings.im.InputMethodListFragment
+import org.fcitx.fcitx5.android.ui.main.settings.stats.TypingStatsFragment
 import org.fcitx.fcitx5.android.ui.main.settings.theme.ThemeFragment
 import org.fcitx.fcitx5.android.utils.config.ConfigDescriptor
 import org.fcitx.fcitx5.android.utils.parcelable
@@ -85,6 +86,9 @@ sealed class SettingsRoute : Parcelable {
 
     @Serializable
     data object Advanced : SettingsRoute()
+
+    @Serializable
+    data object Stats : SettingsRoute()
 
     @Serializable
     data object Developer : SettingsRoute()
@@ -224,6 +228,9 @@ sealed class SettingsRoute : Parcelable {
             }
             fragment<AdvancedSettingsFragment, Advanced> {
                 label = ctx.getString(R.string.advanced)
+            }
+            fragment<TypingStatsFragment, Stats> {
+                label = ctx.getString(R.string.typing_stats)
             }
             fragment<DeveloperFragment, Developer> {
                 label = ctx.getString(R.string.developer)

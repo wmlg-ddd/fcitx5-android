@@ -316,4 +316,18 @@
     <string name="emoji_skin_tone_type_6">🏿 深膚色 (Type-6)</string>
     <string name="hide_unsupported_emojis">隱藏不支援的表情</string>
     <string name="preferred_voice_input">首選語音輸入</string>
+    <string name="typing_stats">輸入統計</string>
+    <string name="stats_enable">啟用輸入統計</string>
+    <string name="stats_privacy_hint">統計僅儲存在本機，不上傳；密碼輸入框不會被統計。</string>
+    <string name="stats_today">今日</string>
+    <string name="stats_chars">字數</string>
+    <string name="stats_speed">速度（字/分鐘）</string>
+    <string name="stats_total_summary">共 %1$s 字 / %2$d 天</string>
+    <string name="stats_last_7_days">近7天</string>
+    <string name="stats_last_30_days">近30天</string>
+    <string name="stats_daily_chars">每日字數</string>
+    <string name="stats_daily_speed">每日速度（字/分鐘）</string>
+    <string name="stats_top_chars">高頻字</string>
+    <string name="stats_top_words">高頻詞</string>
+    <string name="stats_no_data">暫無資料</string>
 </resources>

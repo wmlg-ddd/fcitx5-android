@@ -371,6 +371,10 @@ class AppPrefs(private val sharedPreferences: SharedPreferences) {
         )
     }
 
+    inner class Stats : ManagedPreferenceCategory(R.string.typing_stats, sharedPreferences) {
+        val statsEnabled = switch(R.string.stats_enable, "stats_enable", true)
+    }
+
     private val providers = mutableListOf<ManagedPreferenceProvider>()
 
     fun <T : ManagedPreferenceProvider> registerProvider(
@@ -390,6 +394,7 @@ class AppPrefs(private val sharedPreferences: SharedPreferences) {
     val candidates = Candidates().register()
     val clipboard = Clipboard().register()
     val symbols = Symbols().register()
+    val stats = Stats().register()
     val advanced = Advanced().register()
 
     @Keep

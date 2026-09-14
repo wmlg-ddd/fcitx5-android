@@ -161,4 +161,18 @@
     <string name="following_system_settings">Wie Systemeinstellungen</string>
     <string name="button_sound">Ton bei Tastendruck</string>
     <string name="button_sound_volume">Ton Tastendruck Lautstärke</string>
-    </resources>
+        <string name="typing_stats">Eingabestatistik</string>
+    <string name="stats_enable">Eingabestatistik aktivieren</string>
+    <string name="stats_privacy_hint">Statistiken werden nur lokal gespeichert. Passwortfelder werden nie erfasst.</string>
+    <string name="stats_today">Heute</string>
+    <string name="stats_chars">Zeichen</string>
+    <string name="stats_speed">Geschwindigkeit (Zeichen/Min)</string>
+    <string name="stats_total_summary">Gesamt: %1$s Zeichen an %2$d Tagen</string>
+    <string name="stats_last_7_days">7 Tage</string>
+    <string name="stats_last_30_days">30 Tage</string>
+    <string name="stats_daily_chars">Zeichen pro Tag</string>
+    <string name="stats_daily_speed">Tempo pro Tag (Zeichen/Min)</string>
+    <string name="stats_top_chars">Häufigste Zeichen</string>
+    <string name="stats_top_words">Häufigste Wörter</string>
+    <string name="stats_no_data">Noch keine Daten</string>
+</resources>

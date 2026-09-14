@@ -124,4 +124,18 @@
     <string name="i_do_not_need_it">No lo necesito</string>
     <string name="grant_permission">Otorgar permiso</string>
     <string name="update_table">Actualizar tabla</string>
-    </resources>
+        <string name="typing_stats">Estadísticas de escritura</string>
+    <string name="stats_enable">Activar estadísticas de escritura</string>
+    <string name="stats_privacy_hint">Las estadísticas se guardan solo en el dispositivo. Los campos de contraseña nunca se registran.</string>
+    <string name="stats_today">Hoy</string>
+    <string name="stats_chars">Caracteres</string>
+    <string name="stats_speed">Velocidad (car./min)</string>
+    <string name="stats_total_summary">Total: %1$s caracteres en %2$d días</string>
+    <string name="stats_last_7_days">7 días</string>
+    <string name="stats_last_30_days">30 días</string>
+    <string name="stats_daily_chars">Caracteres por día</string>
+    <string name="stats_daily_speed">Velocidad por día (car./min)</string>
+    <string name="stats_top_chars">Caracteres frecuentes</string>
+    <string name="stats_top_words">Palabras frecuentes</string>
+    <string name="stats_no_data">Aún no hay datos</string>
+</resources>

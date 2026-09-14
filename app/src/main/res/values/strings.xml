@@ -322,4 +322,18 @@
     <string name="keyboard_height_percent_base">Keyboard height percent base</string>
     <string name="display_metrics">Display metrics (Resources.getDisplayMetrics)</string>
     <string name="real_size">Real size (Display.getRealSize)</string>
+    <string name="typing_stats">Typing stats</string>
+    <string name="stats_enable">Enable typing stats</string>
+    <string name="stats_privacy_hint">Stats are stored locally only. Password fields are never counted.</string>
+    <string name="stats_today">Today</string>
+    <string name="stats_chars">Characters</string>
+    <string name="stats_speed">Speed (chars/min)</string>
+    <string name="stats_total_summary">Total: %1$s chars in %2$d days</string>
+    <string name="stats_last_7_days">7 days</string>
+    <string name="stats_last_30_days">30 days</string>
+    <string name="stats_daily_chars">Daily characters</string>
+    <string name="stats_daily_speed">Daily speed (chars/min)</string>
+    <string name="stats_top_chars">Top characters</string>
+    <string name="stats_top_words">Top words</string>
+    <string name="stats_no_data">No data yet</string>
 </resources>

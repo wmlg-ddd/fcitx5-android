@@ -91,4 +91,18 @@
     <string name="quickphrase_phrase">구문</string>
     <string name="reload_config">구성 새로고침</string>
     <string name="input_method_options">입력기 옵션</string>
-    </resources>
+        <string name="typing_stats">입력 통계</string>
+    <string name="stats_enable">입력 통계 사용</string>
+    <string name="stats_privacy_hint">통계는 기기에만 저장되며 비밀번호 입력란은 기록되지 않습니다.</string>
+    <string name="stats_today">오늘</string>
+    <string name="stats_chars">글자 수</string>
+    <string name="stats_speed">속도 (글자/분)</string>
+    <string name="stats_total_summary">총 %1$s자 / %2$d일</string>
+    <string name="stats_last_7_days">7일</string>
+    <string name="stats_last_30_days">30일</string>
+    <string name="stats_daily_chars">일별 글자 수</string>
+    <string name="stats_daily_speed">일별 속도 (글자/분)</string>
+    <string name="stats_top_chars">자주 쓰는 글자</string>
+    <string name="stats_top_words">자주 쓰는 단어</string>
+    <string name="stats_no_data">데이터 없음</string>
+</resources>

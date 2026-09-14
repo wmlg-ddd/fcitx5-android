@@ -321,4 +321,18 @@
     <string name="keyboard_height_percent_base">键盘高度百分比</string>
     <string name="display_metrics">显示指标 (Resources.getDisplayMetrics)</string>
     <string name="real_size">真实尺寸 (Display.getRealSize)</string>
+    <string name="typing_stats">输入统计</string>
+    <string name="stats_enable">启用输入统计</string>
+    <string name="stats_privacy_hint">统计仅保存在本地，不上传；密码输入框不会被统计。</string>
+    <string name="stats_today">今日</string>
+    <string name="stats_chars">字数</string>
+    <string name="stats_speed">速度（字/分钟）</string>
+    <string name="stats_total_summary">共 %1$s 字 / %2$d 天</string>
+    <string name="stats_last_7_days">近7天</string>
+    <string name="stats_last_30_days">近30天</string>
+    <string name="stats_daily_chars">每日字数</string>
+    <string name="stats_daily_speed">每日速度（字/分钟）</string>
+    <string name="stats_top_chars">高频字</string>
+    <string name="stats_top_words">高频词</string>
+    <string name="stats_no_data">暂无数据</string>
 </resources>

@@ -62,6 +62,7 @@ import org.fcitx.fcitx5.android.data.prefs.AppPrefs
 import org.fcitx.fcitx5.android.data.prefs.ManagedPreference
 import org.fcitx.fcitx5.android.data.prefs.ManagedPreferenceProvider
 import org.fcitx.fcitx5.android.data.theme.Theme
+import org.fcitx.fcitx5.android.data.stats.TypingStats
 import org.fcitx.fcitx5.android.data.theme.ThemeManager
 import org.fcitx.fcitx5.android.input.cursor.CursorRange
 import org.fcitx.fcitx5.android.input.cursor.CursorTracker
@@ -229,10 +230,21 @@ class FcitxInputMethodService : LifecycleInputMethodService() {
         lastKnownConfig = resources.configuration
     }
 
+    private fun isPasswordField(): Boolean {
+        val info = currentInputEditorInfo ?: return false
+        val inputType = info.inputType
+        val variation = inputType and InputType.TYPE_MASK_VARIATION
+        return variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
+                variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD ||
+                variation == InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD ||
+                variation == InputType.TYPE_NUMBER_VARIATION_PASSWORD
+    }
+
     private fun handleFcitxEvent(event: FcitxEvent<*>) {
         when (event) {
             is FcitxEvent.CommitStringEvent -> {
                 commitText(event.data.text, event.data.cursor)
+                TypingStats.onCommit(event.data.text, isPasswordField())
             }
             is FcitxEvent.KeyEvent -> event.data.let event@{
                 if (it.states.virtual) {
