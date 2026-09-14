@@ -136,12 +136,11 @@ class TypingStatsFragment : Fragment() {
         add(topWords, lParams(width = matchParent, height = wrapContent))
     }
 
-    private fun verticalLayout(init: LinearLayout.() -> Unit) =
-        view(::LinearLayout) {
+   private fun verticalLayout(init: LinearLayout.() -> Unit) =
+        requireContext().view(::LinearLayout) {
             orientation = LinearLayout.VERTICAL
             init()
         }
-
     private fun LinearLayout.sectionTitle(res: Int): TextView = textView {
         textResource = res
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
