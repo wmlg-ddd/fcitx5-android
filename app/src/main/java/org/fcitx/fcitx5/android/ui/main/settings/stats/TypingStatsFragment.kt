@@ -136,20 +136,20 @@ class TypingStatsFragment : Fragment() {
         add(topWords, lParams(width = matchParent, height = wrapContent))
     }
 
-    private fun verticalLayout(init: android.widget.LinearLayout.() -> Unit) =
-        view(::android.widget.LinearLayout) {
-            orientation = android.widget.LinearLayout.VERTICAL
+    private fun verticalLayout(init: LinearLayout.() -> Unit) =
+        view(::LinearLayout) {
+            orientation = LinearLayout.VERTICAL
             init()
         }
 
-    private fun android.widget.LinearLayout.sectionTitle(res: Int): TextView = textView {
+    private fun LinearLayout.sectionTitle(res: Int): TextView = textView {
         textResource = res
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
         val pad = dp(8f).toInt()
         setPadding(0, pad * 2, 0, pad)
     }
 
-    private fun android.widget.LinearLayout.summaryRow(res: Int): TextView {
+    private fun LinearLayout.summaryRow(res: Int): TextView {
         val value = textView {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
             gravity = android.view.Gravity.CENTER_VERTICAL
