@@ -12,6 +12,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SwitchCompat
 import android.widget.TextView
 import androidx.fragment.app.Fragment
