@@ -332,4 +332,5 @@
     <string name="stats_top_chars">Частые символы</string>
     <string name="stats_top_words">Частые слова</string>
     <string name="stats_no_data">Данных пока нет</string>
+    <string name="swipe_any_key_move_cursor">Свайп по любой клавише перемещает курсор</string>
 </resources>

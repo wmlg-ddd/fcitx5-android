@@ -138,4 +138,5 @@
     <string name="stats_top_chars">Caracteres frecuentes</string>
     <string name="stats_top_words">Palabras frecuentes</string>
     <string name="stats_no_data">Aún no hay datos</string>
+    <string name="swipe_any_key_move_cursor">Deslizar en cualquier tecla mueve el cursor</string>
 </resources>

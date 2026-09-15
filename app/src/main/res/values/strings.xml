@@ -336,4 +336,5 @@
     <string name="stats_top_chars">Top characters</string>
     <string name="stats_top_words">Top words</string>
     <string name="stats_no_data">No data yet</string>
+    <string name="swipe_any_key_move_cursor">Swipe any key to move cursor</string>
 </resources>

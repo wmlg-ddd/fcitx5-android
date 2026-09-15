@@ -335,4 +335,5 @@
     <string name="stats_top_chars">高频字</string>
     <string name="stats_top_words">高频词</string>
     <string name="stats_no_data">暂无数据</string>
+    <string name="swipe_any_key_move_cursor">任意键左右滑动移动光标</string>
 </resources>

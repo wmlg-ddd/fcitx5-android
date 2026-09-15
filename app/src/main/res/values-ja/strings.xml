@@ -268,4 +268,5 @@
     <string name="stats_top_chars">よく使う文字</string>
     <string name="stats_top_words">よく使う単語</string>
     <string name="stats_no_data">データなし</string>
+    <string name="swipe_any_key_move_cursor">どのキーでもスワイプでカーソル移動</string>
 </resources>

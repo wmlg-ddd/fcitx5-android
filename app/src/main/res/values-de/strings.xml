@@ -175,4 +175,5 @@
     <string name="stats_top_chars">Häufigste Zeichen</string>
     <string name="stats_top_words">Häufigste Wörter</string>
     <string name="stats_no_data">Noch keine Daten</string>
+    <string name="swipe_any_key_move_cursor">Wischen auf einer beliebigen Taste bewegt den Cursor</string>
 </resources>

@@ -55,6 +55,7 @@ abstract class BaseKeyboard(
     private val popupOnKeyPress by prefs.keyboard.popupOnKeyPress
     private val expandKeypressArea by prefs.keyboard.expandKeypressArea
     private val swipeSymbolDirection by prefs.keyboard.swipeSymbolDirection
+    private val swipeAnyKeyMoveCursor by prefs.keyboard.swipeAnyKeyMoveCursor
 
     private val spaceSwipeMoveCursor = prefs.keyboard.spaceSwipeMoveCursor
     private val spaceKeys = mutableListOf<KeyView>()
@@ -226,7 +227,6 @@ abstract class BaseKeyboard(
                         swipeEnabled = true
                         swipeThresholdX = selectionSwipeThreshold
                         swipeThresholdY = inputSwipeThreshold
-                        swipeRepeatEnabled = true
                         val oldOnGestureListener = onGestureListener ?: OnGestureListener.Empty
                         var startX = 0f
                         var startY = 0f
@@ -241,7 +241,8 @@ abstract class BaseKeyboard(
                                     0 -> false
                                     // horizontal swipe moves the cursor, but only when
                                     // the trajectory is more horizontal than vertical
-                                    else -> if (abs(event.x - startX) > abs(event.y - startY)) {
+                                    else -> if (swipeAnyKeyMoveCursor &&
+                                        abs(event.x - startX) > abs(event.y - startY)) {
                                         val sym =
                                             if (count > 0) FcitxKeyMapping.FcitxKey_Right else FcitxKeyMapping.FcitxKey_Left
                                         repeat(count.absoluteValue) {
@@ -375,7 +376,6 @@ abstract class BaseKeyboard(
                 swipeEnabled = true
                 swipeThresholdX = selectionSwipeThreshold
                 swipeThresholdY = disabledSwipeThreshold
-                swipeRepeatEnabled = true
                 val oldOnGestureListener = onGestureListener ?: OnGestureListener.Empty
                 var startX = 0f
                 var startY = 0f
@@ -389,7 +389,8 @@ abstract class BaseKeyboard(
                         GestureType.Move -> when (val count = event.countX) {
                             0 -> false
                             // only when the trajectory is more horizontal than vertical
-                            else -> if (abs(event.x - startX) > abs(event.y - startY)) {
+                            else -> if (swipeAnyKeyMoveCursor &&
+                                abs(event.x - startX) > abs(event.y - startY)) {
                                 val sym =
                                     if (count > 0) FcitxKeyMapping.FcitxKey_Right else FcitxKeyMapping.FcitxKey_Left
                                 repeat(count.absoluteValue) {

@@ -105,4 +105,5 @@
     <string name="stats_top_chars">자주 쓰는 글자</string>
     <string name="stats_top_words">자주 쓰는 단어</string>
     <string name="stats_no_data">데이터 없음</string>
+    <string name="swipe_any_key_move_cursor">아무 키나 스와이프하여 커서 이동</string>
 </resources>

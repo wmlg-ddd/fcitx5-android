@@ -177,6 +177,9 @@ class AppPrefs(private val sharedPreferences: SharedPreferences) {
         )
         val spaceSwipeMoveCursor =
             switch(R.string.space_swipe_move_cursor, "space_swipe_move_cursor", true)
+        val swipeAnyKeyMoveCursor = switch(
+            R.string.swipe_any_key_move_cursor, "swipe_any_key_move_cursor", true
+        )
         val showLangSwitchKey =
             switch(R.string.show_lang_switch_key, "show_lang_switch_key", true)
         val langSwitchKeyBehavior = enumList(
