@@ -32,6 +32,8 @@ jobs:
       - name: Setup Android environment
         uses: android-actions/setup-android@v4
         with:
+          packages: platform-tools
+        with:
           packages: cmake;3.31.6
 
       - name: Setup Gradle
