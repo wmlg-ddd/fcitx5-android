@@ -38,6 +38,7 @@ import splitties.views.dsl.constraintlayout.rightOfParent
 import splitties.views.dsl.constraintlayout.rightToLeftOf
 import splitties.views.dsl.constraintlayout.topOfParent
 import splitties.views.dsl.core.add
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -74,6 +75,9 @@ abstract class BaseKeyboard(
 
     // a rather large threshold effectively disables swipe of the direction
     private val disabledSwipeThreshold = dp(800f)
+
+    // tan(15°): max deviation from the vertical axis that still triggers the swipe symbol
+    private val swipeAngleTolerance = 0.268f
 
     private val keyRows: List<ConstraintLayout>
 
@@ -224,14 +228,20 @@ abstract class BaseKeyboard(
                         swipeThresholdY = inputSwipeThreshold
                         swipeRepeatEnabled = true
                         val oldOnGestureListener = onGestureListener ?: OnGestureListener.Empty
+                        var startX = 0f
+                        var startY = 0f
                         onGestureListener = OnGestureListener { view, event ->
                             when (event.type) {
+                                GestureType.Down -> {
+                                    startX = event.x
+                                    startY = event.y
+                                    false
+                                }
                                 GestureType.Move -> when (val count = event.countX) {
                                     0 -> false
-                                    // horizontal swipe moves the cursor, but leave the
-                                    // gesture unconsumed when it is mainly vertical,
-                                    // so the up swipe still triggers the swipe symbol
-                                    else -> if (event.totalX.absoluteValue > event.totalY.absoluteValue) {
+                                    // horizontal swipe moves the cursor, but only when
+                                    // the trajectory is more horizontal than vertical
+                                    else -> if (abs(event.x - startX) > abs(event.y - startY)) {
                                         val sym =
                                             if (count > 0) FcitxKeyMapping.FcitxKey_Right else FcitxKeyMapping.FcitxKey_Left
                                         repeat(count.absoluteValue) {
@@ -242,7 +252,13 @@ abstract class BaseKeyboard(
                                     } else false
                                 }
                                 GestureType.Up -> {
-                                    if (!event.consumed && swipeSymbolDirection.checkY(event.totalY)) {
+                                    val dx = abs(event.x - startX)
+                                    val dy = abs(event.y - startY)
+                                    // tolerate up to 15 degrees of deviation from the
+                                    // vertical axis when triggering the swipe symbol
+                                    if (!event.consumed && swipeSymbolDirection.checkY(event.totalY) &&
+                                        dx <= dy * swipeAngleTolerance
+                                    ) {
                                         onAction(it.action)
                                         true
                                     } else {
@@ -361,11 +377,19 @@ abstract class BaseKeyboard(
                 swipeThresholdY = disabledSwipeThreshold
                 swipeRepeatEnabled = true
                 val oldOnGestureListener = onGestureListener ?: OnGestureListener.Empty
+                var startX = 0f
+                var startY = 0f
                 onGestureListener = OnGestureListener { view, event ->
                     when (event.type) {
+                        GestureType.Down -> {
+                            startX = event.x
+                            startY = event.y
+                            false
+                        }
                         GestureType.Move -> when (val count = event.countX) {
                             0 -> false
-                            else -> {
+                            // only when the trajectory is more horizontal than vertical
+                            else -> if (abs(event.x - startX) > abs(event.y - startY)) {
                                 val sym =
                                     if (count > 0) FcitxKeyMapping.FcitxKey_Right else FcitxKeyMapping.FcitxKey_Left
                                 repeat(count.absoluteValue) {
@@ -373,7 +397,7 @@ abstract class BaseKeyboard(
                                     if (hapticOnRepeat) InputFeedbacks.hapticFeedback(view)
                                 }
                                 true
-                            }
+                            } else false
                         }
                         else -> false
                     } || oldOnGestureListener.onGesture(view, event)
