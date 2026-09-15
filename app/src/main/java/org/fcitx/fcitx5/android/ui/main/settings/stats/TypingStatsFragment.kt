@@ -12,7 +12,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import androidx.appcompat.widget.SwitchCompat
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -31,6 +30,7 @@ import splitties.views.dsl.core.horizontalLayout
 import splitties.views.dsl.core.lParams
 import splitties.views.dsl.core.matchParent
 import splitties.views.dsl.core.textView
+import splitties.views.dsl.core.verticalLayout
 import splitties.views.dsl.core.view
 import splitties.views.dsl.core.wrapContent
 import splitties.views.dsl.core.wrapInScrollView
@@ -61,7 +61,7 @@ class TypingStatsFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = verticalLayoutRoot().wrapInScrollView()
 
-    private fun verticalLayoutRoot() = verticalLayout {
+    private fun verticalLayoutRoot() = requireContext().verticalLayout {
         setPaddingDp(16)
 
         val statsEnabled = AppPrefs.getInstance().stats.statsEnabled
@@ -136,19 +136,14 @@ class TypingStatsFragment : Fragment() {
         add(topWords, lParams(width = matchParent, height = wrapContent))
     }
 
-   private fun verticalLayout(init: LinearLayout.() -> Unit) =
-        requireContext().view(::LinearLayout) {
-            orientation = LinearLayout.VERTICAL
-            init()
-        }
-    private fun LinearLayout.sectionTitle(res: Int): TextView = textView {
+    private fun android.widget.LinearLayout.sectionTitle(res: Int): TextView = textView {
         textResource = res
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
         val pad = dp(8f).toInt()
         setPadding(0, pad * 2, 0, pad)
     }
 
-    private fun LinearLayout.summaryRow(res: Int): TextView {
+    private fun android.widget.LinearLayout.summaryRow(res: Int): TextView {
         val value = textView {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
             gravity = android.view.Gravity.CENTER_VERTICAL
